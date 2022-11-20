@@ -1,12 +1,13 @@
 #!/bin/bash
 # ================
-#  执行命令 bash {脚本文件名}
-#  crontab 部署
-#  1、执行： crontab -e 
-#  2、写入: */10 * * * * bash /root/aleo3-monitor.sh >/root/monitor.log >&1 &
-#  3、按esc ，再 :wq 三个字符，自后回车退出
-#  4、检查： 执行crontab -l 如果出现步骤2中命令单独一行即为成功
-#  5、后续观察，可查看/root/monitor.log 日志文件观察守护记录
+#  A 下载命令：cd ~ && wget -O /root/aleo-process-monitor.sh https://raw.githubusercontent.com/DinoZzhong/scripts/main/aleo-process-monitor.sh
+#  B 执行命令 bash {脚本文件名}
+#  Ccrontab 部署步骤
+#   1、执行： crontab -e 
+#   2、写入: */10 * * * * bash /root/aleo-process-monitor.sh >/root/monitor.log >&1 &
+#   3、按esc ，再 :wq 三个字符，自后回车退出
+#   4、检查： 执行crontab -l 如果出现步骤2中命令单独一行即为成功
+#   5、后续观察，可查看/root/monitor.log 日志文件观察守护记录
 
 # ===============
 log(){
@@ -45,7 +46,7 @@ function run_aleo_prover(){
   log "开始启动执行"
   ## 暴力kill 
   ps -ef|grep "$proc_name" |grep -v grep  |awk '{print $2}' |xargs kill -9
-  ## 加载环境变量重启 
+  ## 加载环境变量重启 ß
   source /root/.cargo/env
   source /etc/profile
  
@@ -59,11 +60,11 @@ function run_aleo_prover(){
 # cpu 负载判断
 function check_cpu_load_rate(){
   cpu_load=`ps -aux |grep "$proc_name" |grep -v grep |awk '{print $3}'`
-  if [[ ! -z $cpu_load $(echo "$cpu_load < 600" | bc) = 1 ]]; then 
+  if [[ ! -z $cpu_load && $(echo "$cpu_load < 600" | bc ) = 1 ]]; then 
     # cpu 负载小于期望值 重启 ，正常16core 负载在700~800之间
     # 建议crontab 10min以上，默认由系统自动重启
     log "cpu 负载$cpu_load ,触发重启操作"
-    #run_aleo_prover
+    run_aleo_prover
   fi
 }
 
