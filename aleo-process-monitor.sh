@@ -2,9 +2,9 @@
 # ================
 #  A 下载命令：cd ~ && wget -O /root/aleo-process-monitor.sh https://raw.githubusercontent.com/DinoZzhong/scripts/main/aleo-process-monitor.sh
 #  B 执行命令 bash {脚本文件名}
-#  Ccrontab 部署步骤
+#  C crontab 部署步骤
 #   1、执行： crontab -e 
-#   2、写入: */10 * * * * bash /root/aleo-process-monitor.sh >/root/monitor.log >&1 &
+#   2、写入: */1 * * * * bash /root/aleo-process-monitor.sh >/root/monitor.log >&1 &
 #   3、按esc ，再 :wq 三个字符，自后回车退出
 #   4、检查： 执行crontab -l 如果出现步骤2中命令单独一行即为成功
 #   5、后续观察，可查看/root/monitor.log 日志文件观察守护记录
@@ -45,12 +45,13 @@ function run_aleo_prover(){
   check_process_runtime
   log "开始启动执行"
   ## 暴力kill 
-  ps -ef|grep "$proc_name" |grep -v grep  |awk '{print $2}' |xargs kill -9
+  ps -ef|grep "$proc_name" |grep -v grep  |awk '{print $2}' |xargs -r kill -9
   ## 加载环境变量重启 ß
-  source /root/.cargo/env
-  source /etc/profile
- 
-  nohup /root/snarkOS/run-prover.sh > /root/snarkOS/run-prover.log 2>&1 &
+  # source /root/.cargo/env
+  # source /etc/profile
+  #nohup /root/snarkOS/run-prover.sh > /root/snarkOS/run-prover.log 2>&1 &
+  
+  echo 3 | bash aleo3-daniel.sh
   log "aleo_prover启动成功,执行中，可查看/root/snarkOS/run-prover.log 确认状态"
   # 执行完成就退出
   exit 0
@@ -82,7 +83,6 @@ function check_cycle_unit(){
 
 # 检查进程
 function check_thread_exits(){
-  proc_name="snarkos"
   nums=`ps -ef|grep "$proc_name" |grep -v grep |wc -l `
   if [ $nums != 1 ];then
     log "进程数量$nums 不符合预期，重启！！！"
