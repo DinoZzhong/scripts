@@ -66,6 +66,7 @@ function check_cpu_load_rate(){
     log "cpu 负载$cpu_load ,触发重启操作"
     run_aleo_prover
   fi
+  log "cpu 负载 $cpu_load 在预期内"
 }
 
 # 周期判断，定时重启
@@ -76,6 +77,7 @@ function check_cycle_unit(){
     log "判断重启周期，当前每 $1 小时重启一次，重启！！！"
     run_aleo_prover
   fi
+  log "不符合周期重启逻辑，跳过"
 }
 
 # 检查进程
@@ -86,12 +88,14 @@ function check_thread_exits(){
     log "进程数量$nums 不符合预期，重启！！！"
     run_aleo_prover
   fi
+  log "进程数量符合预期，跳过"
 }
 
 main(){
   check_thread_exits
   check_cycle_unit 8
   check_cpu_load_rate
+  log "检查完成,本次正常.."
 }
 
 main 
