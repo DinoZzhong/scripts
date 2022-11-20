@@ -58,7 +58,6 @@ function run_aleo_prover(){
 
 # cpu 负载判断
 function check_cpu_load_rate(){
-
   cpu_load=`ps -aux |grep "$proc_name" |grep -v grep |awk '{print $3}'`
   if [[ ! -z $cpu_load $(echo "$cpu_load < 600" | bc) = 1 ]]; then 
     # cpu 负载小于期望值 重启 ，正常16core 负载在700~800之间
