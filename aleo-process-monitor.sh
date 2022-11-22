@@ -60,6 +60,7 @@ function run_aleo_prover(){
 
 #
 function check_error_log_restart(){
+  log "日志检查 异常信息$1"
   nums=`tail -20 ~/snarkOS/run-prover.log |grep "$1" |wc -l `
   if [ $nums != 0 ];then
    log "gerror.. [$1]"
@@ -72,7 +73,7 @@ fi
 
 # cpu 负载判断
 function check_cpu_load_rate(){
-  cpu_load=`ps -aux |grep "$proc_name" |grep -v grep |awk '{print $3}' |head`
+  cpu_load=`ps -aux |grep "$proc_name" |grep -v grep|head -1 |awk '{print $3}' `
   if [[ ! -z $cpu_load && $(echo "$cpu_load < 600" | bc ) = 1 ]]; then 
     # cpu 负载小于期望值 重启 ，正常16core 负载在700~800之间
     # 建议crontab 10min以上，默认由系统自动重启
@@ -106,7 +107,7 @@ function check_thread_exits(){
 main(){
   check_thread_exits
   check_error_log_restart "Saved working directory and index state WIP"
-  #check_cycle_unit 8
+  check_cycle_unit 8
   check_cpu_load_rate
   log "检查完成,本次正常.."
 }
