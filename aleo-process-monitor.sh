@@ -86,10 +86,12 @@ function check_cpu_load_rate(){
   log "cpu 负载 $cpu_load 在预期内"
 }
 
+
 # 周期判断，定时重启
 function check_cycle_unit(){
   hour=`date +"%H"`
-  if [ "$(($hour % $1))" = "0" ]; then
+  min=`date +"%M"`
+  if [ "$(($hour % $1))" = "0" ] && [[  "$min" == 0* ]]; then
     # 取模为0，每8小时重启
     log "判断重启周期，当前每 $1 小时重启一次，重启！！！"
     run_aleo_prover
