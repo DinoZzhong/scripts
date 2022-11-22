@@ -52,6 +52,9 @@ function run_aleo_prover(){
   #nohup /root/snarkOS/run-prover.sh > /root/snarkOS/run-prover.log 2>&1 &
   
   echo 3 | bash aleo3-daniel.sh
+  sleep 10
+  log "执行第二次"
+  echo 3 | bash aleo3-daniel.sh
   log "aleo_prover启动成功,执行中，可查看/root/snarkOS/run-prover.log 确认状态"
   # 执行完成就退出
   exit 0
