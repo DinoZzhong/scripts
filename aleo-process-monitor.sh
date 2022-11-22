@@ -9,10 +9,16 @@
 #   4、检查： 执行crontab -l 如果出现步骤2中命令单独一行即为成功
 #   5、后续观察，可查看/root/aleo-process-monitor.log 日志文件观察守护记录
 
+# 备注，请结合脚本 aleo3-daniel.sh 使用
+# 来源：cd ~ && wget -O /root/aleo3-daniel.sh https://github.com/8hfq/Daniel-onekey-install/releases/download/1.5.0/aleo3-daniel.sh && chmod +x aleo3-daniel.sh
+
 # ===============
 log(){
   echo [`date '+%Y-%m-%d %H:%M:%S'`] $*
 }
+
+echo  
+log "==========="
 log "开始检查"
 
 proc_name="snarkos"
@@ -71,7 +77,8 @@ function check_error_log_restart(){
    tail ~/snarkOS/run-prover.log
    log "error detail " 
    run_aleo_prover
-fi
+ fi
+ log "检测日志正常，跳过...当前输入字符串 $1"
 }
 
 # cpu 负载判断
