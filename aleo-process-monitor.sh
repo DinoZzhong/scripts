@@ -20,7 +20,7 @@ proc_name="snarkos"
 # 检查启动时间，启动时间过短则退出
 function check_process_runtime(){
   log "进入启动prover检查..."
-  pid=`ps -ef|grep "$proc_name" |grep -v grep  |awk '{print $2}'`
+  pid=`ps -ef|grep "$proc_name" |grep -v grep  |head -1|awk '{print $2}'`
   sys_uptime=$(cat /proc/uptime | cut -d" " -f1)
   user_hz=$(getconf CLK_TCK)
 
@@ -58,9 +58,21 @@ function run_aleo_prover(){
 
 }
 
+#
+function check_error_log_restart(){
+  nums=`tail -20 ~/snarkOS/run-prover.log |grep "$1" |wc -l `
+  if [ $nums != 0 ];then
+   log "gerror.. [$1]"
+   ps -ef|grep snark |grep -v grep 
+   tail ~/snarkOS/run-prover.log
+   log "error detail " 
+   run_aleo_prover
+fi
+}
+
 # cpu 负载判断
 function check_cpu_load_rate(){
-  cpu_load=`ps -aux |grep "$proc_name" |grep -v grep |awk '{print $3}'`
+  cpu_load=`ps -aux |grep "$proc_name" |grep -v grep |awk '{print $3}' |head`
   if [[ ! -z $cpu_load && $(echo "$cpu_load < 600" | bc ) = 1 ]]; then 
     # cpu 负载小于期望值 重启 ，正常16core 负载在700~800之间
     # 建议crontab 10min以上，默认由系统自动重启
@@ -83,8 +95,8 @@ function check_cycle_unit(){
 
 # 检查进程
 function check_thread_exits(){
-  nums=`ps -ef|grep "$proc_name" |grep -v grep |wc -l `
-  if [ $nums != 1 ];then
+  nums=`ps -ef|grep "$proc_name" |grep -i aprivatekey|grep -v grep |wc -l `
+  if [ $nums != 2 ];then
     log "进程数量$nums 不符合预期，重启！！！"
     run_aleo_prover
   fi
@@ -93,7 +105,8 @@ function check_thread_exits(){
 
 main(){
   check_thread_exits
-  check_cycle_unit 8
+  check_error_log_restart "Saved working directory and index state WIP"
+  #check_cycle_unit 8
   check_cpu_load_rate
   log "检查完成,本次正常.."
 }
