@@ -1,13 +1,13 @@
 #!/bin/bash
 # ================
 #  A 下载命令：cd ~ && wget -O /root/aleo-process-monitor.sh https://raw.githubusercontent.com/DinoZzhong/scripts/main/aleo-process-monitor.sh
-#  B 执行命令 bash {脚本文件名}
+#  B 测试输出，执行命令 bash aleo-process-monitor.sh
 #  C crontab 部署步骤
 #   1、执行： crontab -e 
-#   2、写入: */1 * * * * bash /root/aleo-process-monitor.sh >/root/monitor.log >&1 &
+#   2、写入: */10 * * * * bash /root/aleo-process-monitor.sh >>/root/aleo-process-monitor.log >>&1 &
 #   3、按esc ，再 :wq 三个字符，自后回车退出
 #   4、检查： 执行crontab -l 如果出现步骤2中命令单独一行即为成功
-#   5、后续观察，可查看/root/monitor.log 日志文件观察守护记录
+#   5、后续观察，可查看/root/aleo-process-monitor.log 日志文件观察守护记录
 
 # ===============
 log(){
