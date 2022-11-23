@@ -114,11 +114,12 @@ function check_cycle_unit(){
 function check_thread_exits(){
   nums=`ps -ef|grep "$proc_name" |grep -i aprivatekey|grep -v grep |wc -l `
   if [ $nums -ge 2 ] && [ $nums -le 4 ];then
+    log "进程数量 $nums 符合预期，跳过"
+  else 
     log "进程数量$nums 不符合预期，重启！！！"
     ps -ef|grep "$proc_name" |grep -i aprivatekey
     run_aleo_prover
-  else 
-    log "进程数量 $nums 符合预期，跳过"
+  
   fi
   
 }
