@@ -67,10 +67,10 @@ function run_aleo_prover(){
   exit 0
 }
 
-#
+# 日志检查，增加 -a 解决binary问题
 function check_error_log_restart(){
   log "日志检查 异常信息$1"
-  nums=`tail -20 ~/snarkOS/run-prover.log |grep "$1" |wc -l `
+  nums=`tail -20 ~/snarkOS/run-prover.log |grep -a "$1" |wc -l `
   if [ $nums != 0 ];then
      log "gerror.. [$1]"
      ps -ef|grep snark |grep -v grep 
