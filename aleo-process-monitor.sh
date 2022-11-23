@@ -65,7 +65,6 @@ function run_aleo_prover(){
   log "aleo_prover启动成功,执行中，可查看/root/snarkOS/run-prover.log 确认状态"
   # 执行完成就退出
   exit 0
-
 }
 
 #
@@ -87,7 +86,7 @@ function check_error_log_restart(){
 # cpu 负载判断
 function check_cpu_load_rate(){
   cpu_load=`ps -aux |grep "$proc_name" |grep -v grep|head -1 |awk '{print $3}' `
-  if [[ ! -z $cpu_load && $(echo "$cpu_load < 600" | bc ) = 1 ]]; then 
+  if [[ ! -z $cpu_load && $(echo "$cpu_load < 200" | bc ) = 1 ]]; then 
     # cpu 负载小于期望值 重启 ，正常16core 负载在700~800之间
     # 建议crontab 10min以上，默认由系统自动重启
     ps -aux |grep "$proc_name" |grep -v grep 
@@ -114,12 +113,12 @@ function check_cycle_unit(){
 # 检查进程
 function check_thread_exits(){
   nums=`ps -ef|grep "$proc_name" |grep -i aprivatekey|grep -v grep |wc -l `
-  if [ $nums != 2 ];then
+  if [ $nums -ge 2 ] && [ $nums -le 4 ];then
     log "进程数量$nums 不符合预期，重启！！！"
     ps -ef|grep "$proc_name" |grep -i aprivatekey
     run_aleo_prover
   else 
-    log "进程数量符合预期，跳过"
+    log "进程数量 $nums 符合预期，跳过"
   fi
   
 }
