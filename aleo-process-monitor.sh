@@ -11,7 +11,7 @@
 
 # 备注，请结合脚本 aleo3-daniel.sh 使用
 # 来源：cd ~ && wget -O /root/aleo3-daniel.sh https://github.com/8hfq/Daniel-onekey-install/releases/download/1.5.0/aleo3-daniel.sh && chmod +x aleo3-daniel.sh
-
+# cd ~ && wget -O /root/aleo-process-monitor.sh https://raw.githubusercontent.com/DinoZzhong/scripts/main/aleo-process-monitor.sh
 # ===============
 log(){
   echo [`date '+%Y-%m-%d %H:%M:%S'`] $*
@@ -67,15 +67,16 @@ function run_aleo_prover(){
   exit 0
 }
 
-# 日志检查，增加 -a 解决binary问题
+#
 function check_error_log_restart(){
   log "日志检查 异常信息$1"
   nums=`tail -20 ~/snarkOS/run-prover.log |grep -a "$1" |wc -l `
   if [ $nums != 0 ];then
-     log "gerror.. [$1]"
+     log "==>error.. [$1]"
+     log "===== detail  ====="
      ps -ef|grep snark |grep -v grep 
-     tail ~/snarkOS/run-prover.log
-     log "error detail " 
+     tail -10 ~/snarkOS/run-prover.log 
+     log "===================== " 
      run_aleo_prover
   else 
     log "检测日志正常，跳过...当前输入字符串 $1"
@@ -119,9 +120,7 @@ function check_thread_exits(){
     log "进程数量$nums 不符合预期，重启！！！"
     ps -ef|grep "$proc_name" |grep -i aprivatekey
     run_aleo_prover
-  
   fi
-  
 }
 
 main(){
