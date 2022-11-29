@@ -60,8 +60,8 @@ function run_aleo_prover(){
   
   echo 3 | bash aleo3-daniel.sh
   sleep 10
-  log "执行第二次"
-  echo 3 | bash aleo3-daniel.sh
+  log "仅执行一次  第二次在涤纶处理"
+  # echo 3 | bash aleo3-daniel.sh
   log "aleo_prover启动成功,执行中，可查看/root/snarkOS/run-prover.log 确认状态"
   # 执行完成就退出
   exit 0
@@ -75,7 +75,7 @@ function check_error_log_restart(){
      log "==>error.. [$1]"
      log "===== detail  ====="
      ps -ef|grep snark |grep -v grep 
-     tail -10 ~/snarkOS/run-prover.log 
+     #tail -10 ~/snarkOS/run-prover.log 
      log "===================== " 
      run_aleo_prover
   else 
@@ -116,6 +116,8 @@ function check_thread_exits(){
   nums=`ps -ef|grep "$proc_name" |grep -i aprivatekey|grep -v grep |wc -l `
   if [ $nums -ge 2 ] && [ $nums -le 4 ];then
     log "进程数量 $nums 符合预期，跳过"
+  elif [ $nums -eq 1 ] ; then 
+    echo 3 | bash aleo3-daniel.sh
   else 
     log "进程数量$nums 不符合预期，重启！！！"
     ps -ef|grep "$proc_name" |grep -i aprivatekey
@@ -125,9 +127,9 @@ function check_thread_exits(){
 
 main(){
   check_thread_exits
-  check_error_log_restart "Saved working directory and index state WIP"
-  check_cycle_unit 8
-  check_cpu_load_rate
+  #check_error_log_restart "Saved working directory and index state WIP"
+  #check_cycle_unit 8
+  #check_cpu_load_rate
   log "检查完成,本次正常.."
 }
 
