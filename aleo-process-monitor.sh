@@ -117,6 +117,7 @@ function check_thread_exits(){
   if [ $nums -ge 2 ] && [ $nums -le 4 ];then
     log "进程数量 $nums 符合预期，跳过"
   elif [ $nums -eq 1 ] ; then 
+    log "进程数量 $nums ,启动一次"
     echo 3 | bash aleo3-daniel.sh
   else 
     log "进程数量$nums 不符合预期，重启！！！"
